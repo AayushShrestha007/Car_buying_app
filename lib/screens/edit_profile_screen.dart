@@ -1,7 +1,8 @@
 import 'package:car_buying_app/viewmodels/auth_viewmodel.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-
+import 'dart:async';
 import 'package:provider/provider.dart';
 
 
@@ -23,19 +24,19 @@ class _EditScreenState extends State<EditScreen> {
   TextEditingController _emailController = TextEditingController();
 
 
+
   Future<void> _selectImage() async {
-    // final ImagePicker _picker = ImagePicker();
-    // final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
-    //
-    // if (image != null) {
-    //   setState(() {
-    //     _selectedImage = File(image.path);
-    //   });
-    // }
+    final ImagePicker _picker = ImagePicker();
+    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+
+    if (image != null) {
+      setState(() {
+        _selectedImage = File(image.path);
+      });
+    }
   }
 
   //Function for changing password
-
   void changePassword(String password, String id) async {
     try {
       if (password == "") {
@@ -44,13 +45,61 @@ class _EditScreenState extends State<EditScreen> {
         );
       } else {
         await _authViewModel.changePassword(password, id);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Password Changed Successfully")),
-        );
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Password too short, please enter a longer password")),
+      );
+    }
+  }
+
+  //Function for changing Name
+  void changeName(String name, String id) async {
+    try {
+      if (name == "") {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Please Fill Name")),
+        );
+      } else {
+        await _authViewModel.changeName(name, id);
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("An unknown error occured")),
+      );
+    }
+  }
+
+  //function for changing Profile Picture
+  Future<void> changeProfilePicture() async {
+    if (_selectedImage != null) {
+      // Upload image to Firebase Storage and get the URL
+      String? imageUrl = await _authViewModel.uploadProfileImage(_selectedImage!);
+
+      if (imageUrl != null) {
+        // Update the image URL in the user model
+        if (_authViewModel.loggedInUser != null) {
+          // _authViewModel.loggedInUser!.imageURL = imageUrl;
+
+          await _authViewModel.changeProfilePicture(imageUrl, _authViewModel!.loggedInUser!.id!);
+        }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Failed to upload profile image")),
+        );
+      }
+    }
+  }
+
+  //Function for logging out
+
+  void logout() async {
+    try {
+      _authViewModel.logout();
+      Navigator.of(context).pushNamed("/login");
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("An unknown error occured")),
       );
     }
   }
@@ -90,10 +139,10 @@ class _EditScreenState extends State<EditScreen> {
               builder: (context, _authViewModel, child) =>
               InkWell(
                 onTap: (){
-                  changePassword(
-                    _passwordController.text,
-                    _authViewModel.loggedInUser?.id ?? '',
-                  );
+                  changePassword(_passwordController.text, _authViewModel.loggedInUser?.id ?? '');
+                  changeName(_nameController.text, _authViewModel.loggedInUser?.id ?? '');
+                  changeProfilePicture();
+
                 },
                 child: Text(
                     "Confirm",
@@ -114,7 +163,7 @@ class _EditScreenState extends State<EditScreen> {
             children: [
               GestureDetector(
                 onTap: () {
-                  // _selectImage();
+                  _selectImage();
                 },
                 child: CircleAvatar(
                   backgroundColor: Colors.blue,
@@ -130,8 +179,7 @@ class _EditScreenState extends State<EditScreen> {
                         width: double.infinity,
                       )
                           : Image.network(
-                        // _authViewModel.loggedInUser?.image ?? "https://picsum.photos/id/237/200/300",
-                        "https://picsum.photos/id/237/200/300",
+                        _authViewModel.loggedInUser?.imageURL ?? "https://www.pngall.com/wp-content/uploads/5/User-Profile-PNG.png",
                         fit: BoxFit.fill,
                         width: double.infinity,
                       ),
@@ -232,27 +280,26 @@ class _EditScreenState extends State<EditScreen> {
               SizedBox(
                 height: 65,
                 width: 350,
-                child: ElevatedButton(
-                  onPressed: () {
-                    // changePassword(
-                    //   _passwordController.text,
-                    //   _authViewModel.loggedInUser?.id ?? '',
-                    // );
-                    // _updateProfile();
-                  },
-                  style: ElevatedButton.styleFrom(
+                child: Consumer<AuthViewModel>(
+                    builder: (context, _authViewModel, child) =>
+                  ElevatedButton(
+                    onPressed: () {
+                      logout();
+                    },
+                    style: ElevatedButton.styleFrom(
 
-                    primary: Color(0xFF1f2959),
-                    elevation: 3,
+                      primary: Color(0xFF1f2959),
+                      elevation: 3,
 
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
                     ),
-                  ),
-                  child: Text(
-                    "Log Out",
-                    style: TextStyle(
-                      fontSize: 18,
+                    child: Text(
+                      "Log Out",
+                      style: TextStyle(
+                        fontSize: 18,
+                      ),
                     ),
                   ),
                 ),

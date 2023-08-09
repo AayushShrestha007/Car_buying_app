@@ -35,6 +35,10 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
 
 
+
+
+
+
   TextEditingController _emailController= TextEditingController(
       text: "test@gmail.com"
   );
@@ -58,7 +62,7 @@ class _LoginScreenState extends State<LoginScreen> {
       await _authViewModel.login(email,password)
           .then((value){
 
-        Navigator.of(context).pushNamed('/editprofile');
+        Navigator.of(context).pushNamed('/home');
 
 
       }).catchError((e){

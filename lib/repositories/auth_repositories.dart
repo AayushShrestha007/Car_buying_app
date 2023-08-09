@@ -1,7 +1,10 @@
 
 
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 import '../models/user_model.dart';
 import '../services/firebase_service.dart';
@@ -90,6 +93,40 @@ class AuthRepository{
   }
 
 
+  //Repo code for uploading image in firestore
+
+  Future<String?> uploadProfileImage(File image, UserModel user) async {
+    try {
+      String imageName = DateTime.now().millisecondsSinceEpoch.toString();
+      String imagePath = "profile_images/$imageName.jpg";
+      TaskSnapshot snapshot = await FirebaseService
+          .storageRef
+          .child(imagePath)
+          .putFile(image);
+      String downloadUrl = await snapshot.ref.getDownloadURL();
+      return downloadUrl;
+    } catch (err) {
+      print("REPO ERR :: " + err.toString());
+      rethrow;
+    }
+  }
+
+
+  //Repo code for updatingProfilePicture
+  Future<bool> changeProfilePicture(String imageURL, String id) async {
+    try {
+
+      userRef.doc(id).update({
+        "imageURL": imageURL,
+      });
+
+      return true;
+    } catch (err) {
+      print("Repo Err :: " + err.toString());
+      rethrow;
+    }
+  }
+
 
 
   //Repo code for changing Name
@@ -105,6 +142,13 @@ class AuthRepository{
       print("Repo Err :: " + err.toString());
       rethrow;
     }
+  }
+
+  //repo code for logging out
+  Future<bool> logout() async{
+    FirebaseService.firebaseAuth.signOut();
+    return true;
+
   }
 
 }

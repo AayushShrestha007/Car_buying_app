@@ -34,6 +34,27 @@ class _EditScreenState extends State<EditScreen> {
     // }
   }
 
+  //Function for changing password
+
+  void changePassword(String password, String id) async {
+    try {
+      if (password == "") {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Please Fill Password")),
+        );
+      } else {
+        await _authViewModel.changePassword(password, id);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Password Changed Successfully")),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Password too short, please enter a longer password")),
+      );
+    }
+  }
+
   @override
   void initState() {
     _authViewModel = Provider.of<AuthViewModel>(context, listen: false);
@@ -65,15 +86,22 @@ class _EditScreenState extends State<EditScreen> {
         actions: [
           Padding(
             padding: const EdgeInsets.only(top: 13, right: 20),
-            child: InkWell(
-              onTap: (){
-              },
-              child: Text(
-                  "Confirm",
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.black,
-              ),
+            child: Consumer<AuthViewModel>(
+              builder: (context, _authViewModel, child) =>
+              InkWell(
+                onTap: (){
+                  changePassword(
+                    _passwordController.text,
+                    _authViewModel.loggedInUser?.id ?? '',
+                  );
+                },
+                child: Text(
+                    "Confirm",
+                style: TextStyle(
+                  fontSize: 18,
+                  color: Colors.black,
+                ),
+                ),
               ),
             ),
           )
@@ -129,6 +157,7 @@ class _EditScreenState extends State<EditScreen> {
               ),
 
               TextFormField(
+                enabled: false,
                 controller: _emailController,
                 decoration: InputDecoration(
                   filled: true,
@@ -200,32 +229,30 @@ class _EditScreenState extends State<EditScreen> {
               SizedBox(
                 height: 30,
               ),
-              Consumer<AuthViewModel>(
-                builder: (context, _authViewModel, child) => SizedBox(
-                  height: 65,
-                  width: 350,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      // changePassword(
-                      //   _passwordController.text,
-                      //   _authViewModel.loggedInUser?.id ?? '',
-                      // );
-                      // _updateProfile();
-                    },
-                    style: ElevatedButton.styleFrom(
+              SizedBox(
+                height: 65,
+                width: 350,
+                child: ElevatedButton(
+                  onPressed: () {
+                    // changePassword(
+                    //   _passwordController.text,
+                    //   _authViewModel.loggedInUser?.id ?? '',
+                    // );
+                    // _updateProfile();
+                  },
+                  style: ElevatedButton.styleFrom(
 
-                      primary: Color(0xFF1f2959),
-                      elevation: 3,
+                    primary: Color(0xFF1f2959),
+                    elevation: 3,
 
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
                     ),
-                    child: Text(
-                      "Log Out",
-                      style: TextStyle(
-                        fontSize: 18,
-                      ),
+                  ),
+                  child: Text(
+                    "Log Out",
+                    style: TextStyle(
+                      fontSize: 18,
                     ),
                   ),
                 ),

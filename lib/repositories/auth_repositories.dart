@@ -71,5 +71,40 @@ class AuthRepository{
   }
 
 
+  //Code to change password
+  Future<bool> changePassword(String password, String id) async {
+    try {
+
+      userRef.doc(id).update({
+        "password": password
+      });
+
+      await FirebaseService.firebaseAuth.currentUser!
+          .updatePassword(password);
+      return true;
+
+    } catch (err) {
+      print("Repo Err :: " + err.toString());
+      rethrow;
+    }
+  }
+
+
+
+
+  //Repo code for changing Name
+  Future<bool> changeName(String name, String id) async {
+    try {
+
+      userRef.doc(id).update({
+        "name": name
+      });
+
+      return true;
+    } catch (err) {
+      print("Repo Err :: " + err.toString());
+      rethrow;
+    }
+  }
 
 }

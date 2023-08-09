@@ -14,6 +14,8 @@ class AuthViewModel with ChangeNotifier{
   UserModel? get loggedInUser => _loggedInUser;
 
 
+
+  //View Model code for register
   Future<void> register(UserModel user) async {
     try {
       var response = await AuthRepository().register(user);
@@ -25,6 +27,8 @@ class AuthViewModel with ChangeNotifier{
   }
 
 
+
+  //View Model code for login
   Future<void> login(String email, String password) async {
     try {
       var response = await AuthRepository().login(email, password);
@@ -33,6 +37,29 @@ class AuthViewModel with ChangeNotifier{
       notifyListeners();
     } catch (err) {
       // AuthRepository().logout();
+      rethrow;
+    }
+  }
+
+  //View Model code for changing password
+
+  Future<void> changePassword(String password, String id) async {
+    try {
+      await AuthRepository().changePassword(password, id);
+      _loggedInUser?.password = password;
+      notifyListeners();
+    } catch (err) {
+      rethrow;
+    }
+  }
+
+  //View Model for changing name
+  Future<void> changeName(String name, String id) async {
+    try {
+      await AuthRepository().changePassword(name, id);
+      _loggedInUser?.password = name;
+      notifyListeners();
+    } catch (err) {
       rethrow;
     }
   }

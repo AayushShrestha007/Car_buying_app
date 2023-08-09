@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "431322261600",
+    "project_id": "car-buying-ddece",
+    "storage_bucket": "car-buying-ddece.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:431322261600:android:cefa936644bf184599fb05",
+        "android_client_info": {
+          "package_name": "com.example.car_buying_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "431322261600-g7v2ark6g0lalq12vpl9gg7cd9eohji3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAouOx-oonw121aWLqn0NGsjQUVRDEsc-w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "431322261600-g7v2ark6g0lalq12vpl9gg7cd9eohji3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

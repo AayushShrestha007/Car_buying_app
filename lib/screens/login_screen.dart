@@ -1,3 +1,4 @@
+import 'package:car_buying_app/viewmodels/car_viewmodel.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -36,9 +37,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
 
 
-
-
-
   TextEditingController _emailController= TextEditingController(
       text: "test@gmail.com"
   );
@@ -48,10 +46,12 @@ class _LoginScreenState extends State<LoginScreen> {
 
 
   late AuthViewModel _authViewModel;
+  late CarViewModel _carViewModel;
 
 
   void initState(){
     _authViewModel= Provider.of<AuthViewModel>(context, listen: false);
+    _carViewModel= Provider.of<CarViewModel>(context, listen: false);
     super.initState();
   }
 
@@ -62,7 +62,10 @@ class _LoginScreenState extends State<LoginScreen> {
       await _authViewModel.login(email,password)
           .then((value){
 
-        Navigator.of(context).pushNamed('/home');
+            _carViewModel.showCars();
+
+            Navigator.of(context).pushNamed('/home');
+
 
 
       }).catchError((e){

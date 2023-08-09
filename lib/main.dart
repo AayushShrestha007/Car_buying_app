@@ -3,6 +3,7 @@ import 'package:car_buying_app/screens/home_screen.dart';
 import 'package:car_buying_app/screens/login_screen.dart';
 import 'package:car_buying_app/screens/register_screen.dart';
 import 'package:car_buying_app/viewmodels/auth_viewmodel.dart';
+import 'package:car_buying_app/viewmodels/car_viewmodel.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -28,6 +29,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider (create: (_) => AuthViewModel()),
+        ChangeNotifierProvider (create: (_) => CarViewModel()),
       ],
       child: MaterialApp(
         title: "Car Booking",

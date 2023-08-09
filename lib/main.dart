@@ -1,3 +1,4 @@
+import 'package:car_buying_app/screens/edit_profile_screen.dart';
 import 'package:car_buying_app/screens/home_screen.dart';
 import 'package:car_buying_app/screens/login_screen.dart';
 import 'package:car_buying_app/screens/register_screen.dart';
@@ -34,11 +35,12 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.blue,
           fontFamily: 'Poppins',
         ),
-        initialRoute: "/register",
+        initialRoute: "/login",
         routes: {
           "/login": (BuildContext context) => LoginScreen(),
           "/register": (BuildContext context) => RegisterScreen(),
-          "/homescreen": (BuildContext context) => HomeScreen(),
+          "/home": (BuildContext context) => HomeScreen(),
+          "/editprofile": (BuildContext context) => EditScreen(),
         },
 
 

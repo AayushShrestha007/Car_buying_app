@@ -58,7 +58,7 @@ class _LoginScreenState extends State<LoginScreen> {
       await _authViewModel.login(email,password)
           .then((value){
 
-        Navigator.of(context).pushNamed('/homescreen');
+        Navigator.of(context).pushNamed('/editprofile');
 
 
       }).catchError((e){

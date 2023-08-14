@@ -30,7 +30,8 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xFFd0d8df),
-      body: Padding(
+      body:
+      Padding(
         padding: const EdgeInsets.only(top: 40, left: 20, right: 20),
         child: Column(
           children: [
@@ -51,58 +52,181 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Image.network(
                       _authViewModel.loggedInUser?.imageURL ?? "https://www.pngall.com/wp-content/uploads/5/User-Profile-PNG.png",
                       fit: BoxFit.cover,
-                      width: 70,
-                      height: 70,
+                      width: 60,
+                      height: 60,
                     ),
                   ),
-
                 ],
               ),
             ),
 
-            StreamBuilder<QuerySnapshot>(
-                stream: _carViewModel.cars,
-                builder: (context, snapshot){
-                  final data = snapshot.data?.docs;
-                  final length = data?.length;
-                  return ListView.builder(
-                      scrollDirection: Axis.vertical,
-                      shrinkWrap: true,
-                      itemCount: length,
-                      itemBuilder:(context, index){
-                        return Container(
+            SizedBox(
+              height: 10,
+            ),
 
-                          padding: const EdgeInsets.all(16.0),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            // border: Border.all(
-                            //   width: 10,
-                            // ),
-                            borderRadius: BorderRadius.all(Radius.circular(30)),
-                          ),
-                          child: Column(
-                            children: [
-                              Row(
+            SingleChildScrollView(
+              child: Container(
+                height: MediaQuery.of(context).size.height-110,
+                child: StreamBuilder<QuerySnapshot>(
+                    stream: _carViewModel.cars,
+                    builder: (context, snapshot){
+                      final data = snapshot.data?.docs;
+                      final length = data?.length ?? 0;
+                      print(length);
+                      return ListView.separated(
+                          scrollDirection: Axis.vertical,
+                          shrinkWrap: true,
+                          itemCount: length,
+                          itemBuilder:(context, index){
+                            return Container(
+
+                              height: 195,
+
+                              padding: const EdgeInsets.all(16.0),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                // border: Border.all(
+                                //   width: 10,
+                                // ),
+                                borderRadius: BorderRadius.all(Radius.circular(30)),
+                              ),
+                              child: Column(
                                 children: [
-                                  CircleAvatar(
-                                    child: Image.network(
-                                      "https://firebasestorage.googleapis.com/v0/b/car-buying-ddece.appspot.com/o/car_images%2Fimage%203-1.png?alt=media&token=4747c21f-52a3-4e51-9534-c1bf7b1823e6",
-                                      fit: BoxFit.cover,
-                                      width: 200,
-                                      height: 200,
-                                    ),
+                                  Row(
+                                    children: [
+                                      SizedBox(
+                                        child: Image.network(
+                                          data?[index]["imageURL"],
+                                          width: 190,
+                                          height: 120,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 20,
+                                      ),
+                                      
+                                      Flexible(
+                                        child: Text(data?[index]["name"],
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+
+                                      //container to show seats
+                                      Container(
+                                          width: 100,
+                                          height: 40,
+                                          alignment: Alignment.center,
+                                        decoration: BoxDecoration(
+                                          color: Color(0xFF1F2959),
+                                          borderRadius: BorderRadius.all(Radius.circular(30)),
+                                        ),
+                                        child: Row(
+                                          children: [
+                                            SizedBox(
+                                              width: 14,
+                                            ),
+                                            Icon(Icons.event_seat,
+                                            color: Colors.white,
+                                            size: 15),
+                                            SizedBox(
+                                              width: 5,
+                                            ),
+                                            Text(data?[index]["seat"] + " Seat",
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 13,
+                                              ),
+                                            ),
+
+                                          ],
+                                        )
+
+                                      ),
+
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+
+                                      //Container to show speed
+                                      Container(
+                                          width: 100,
+                                          height: 40,
+                                          alignment: Alignment.center,
+                                          decoration: BoxDecoration(
+                                            color: Color(0xFF1F2959),
+                                            borderRadius: BorderRadius.all(Radius.circular(30)),
+                                          ),
+                                          child: Row(
+                                            children: [
+                                              SizedBox(
+                                                width: 14,
+                                              ),
+                                              Icon(Icons.speed,
+                                                  color: Colors.white,
+                                                  size: 15),
+                                              SizedBox(
+                                                width: 5,
+                                              ),
+                                              Text(data?[index]["speed"],
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 13,
+                                                ),
+                                              ),
+
+                                            ],
+                                          )
+
+                                      ),
+
+                                      SizedBox(
+                                        width: 60,
+                                      ),
+                                      //container to show favorite button
+                                      Container(
+                                          width: 40,
+                                          height: 40,
+                                          alignment: Alignment.center,
+                                          decoration: BoxDecoration(
+                                            color: Color(0xFF1F2959),
+                                            borderRadius: BorderRadius.all(Radius.circular(200)),
+                                          ),
+                                          child: IconButton(
+                                            onPressed: () {  },
+                                            icon: Icon(
+                                              Icons.favorite,
+                                              color: Colors.white,
+                                              size: 20,
+                                            ),
+
+                                          ),
+
+                                      )
+
+                                    ],
                                   )
                                 ],
                               )
-                            ],
-
-                          )
-
-
-                        );
-                      }
-                  );
-                }
+                            );
+                          },
+                        separatorBuilder: (BuildContext context, int index) {
+                            return SizedBox(
+                              height: 20,
+                            );
+                        },
+                      );
+                    }
+                ),
+              ),
             )
 
           ],

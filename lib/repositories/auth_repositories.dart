@@ -2,6 +2,7 @@
 
 import 'dart:io';
 
+import 'package:car_buying_app/repositories/car_repositories.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -142,6 +143,25 @@ class AuthRepository{
       print("Repo Err :: " + err.toString());
       rethrow;
     }
+  }
+
+  //Repo code for adding something to the favorite list
+  Future<UserModel> addFavorite(String id, UserModel loggedInUser) async{
+
+    try {
+      final response = await CarRepository().carRef.where("id", isEqualTo: id).get();
+
+      print("this is the ref ${response.docs.single.data()}");
+      userRef.doc(loggedInUser.id).update({
+        "favorite": FieldValue.arrayUnion([response.docs.single.data().toJson()]),
+      });
+
+      return loggedInUser;
+    } catch (err) {
+      rethrow;
+    }
+
+
   }
 
   //repo code for logging out

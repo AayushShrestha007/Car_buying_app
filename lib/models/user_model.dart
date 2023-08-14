@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:car_buying_app/models/car_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 UserModel userModelFromJson(String str) => UserModel.fromJson(json.decode(str));
@@ -10,7 +11,7 @@ class UserModel {
   String? name;
   String? email;
   String? password;
-  List<String>? favorite;
+  List<dynamic>? favorite;
   String? imagePath;
   String? imageURL;
   String? uid;
@@ -31,7 +32,7 @@ class UserModel {
     name: json["name"],
     email: json["email"],
     password: json["password"],
-    favorite: json["favorite"] == null ? [] : List<String>.from(json["favorite"]!.map((x) => x)),
+    favorite: json["favorite"] == null ? [] : List<dynamic>.from(json["favorite"]!.map((x) => x)),
     imagePath: json["imagePath"],
     imageURL: json["imageURL"],
     uid: json["uid"],
@@ -55,7 +56,7 @@ class UserModel {
       name: json["name"],
       email: json["email"],
       password: json["password"],
-      favorite: json["favorite"] == null ? [] : List<String>.from(json["favorite"]!.map((x) => x)),
+      favorite: json["favorite"] == null ? [] : List<dynamic>.from(json["favorite"]!.map((x) => x)),
       imagePath: json["imagePath"],
       imageURL: json["imageURL"],
       uid: json["uid"],
@@ -67,17 +68,17 @@ class UserModel {
 }
 
 class Favorite {
-  String? id;
+  CarModel? cars;
 
   Favorite({
-    this.id,
+    this.cars,
   });
 
   factory Favorite.fromJson(Map<String, dynamic> json) => Favorite(
-    id: json["id"],
+    cars: json["cars"],
   );
 
   Map<String, dynamic> toJson() => {
-    "id": id,
+    "cars": cars,
   };
 }

@@ -1,4 +1,5 @@
 import 'package:car_buying_app/screens/edit_profile_screen.dart';
+import 'package:car_buying_app/screens/favorite_screen.dart';
 import 'package:car_buying_app/screens/home_screen.dart';
 import 'package:car_buying_app/screens/login_screen.dart';
 import 'package:car_buying_app/screens/register_screen.dart';
@@ -43,6 +44,7 @@ class MyApp extends StatelessWidget {
           "/register": (BuildContext context) => RegisterScreen(),
           "/home": (BuildContext context) => HomeScreen(),
           "/editprofile": (BuildContext context) => EditScreen(),
+          "/favorite": (BuildContext context)=> FavoriteScreen(),
         },
 
 

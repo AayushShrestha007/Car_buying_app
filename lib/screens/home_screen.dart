@@ -1,3 +1,4 @@
+import 'package:car_buying_app/models/user_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -25,6 +26,16 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
   }
 
+  //function to add Favorite
+  void addFavorite(id, UserModel loggedInUser) async{
+
+    try{
+      _authViewModel.addFavorite(id, loggedInUser);
+
+    } catch (err){
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(err.toString())));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,14 +57,46 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
 
                   SizedBox(
-                    width: 110,
+                    width: 50,
                   ),
-                  ClipOval(
-                    child: Image.network(
-                      _authViewModel.loggedInUser?.imageURL ?? "https://www.pngall.com/wp-content/uploads/5/User-Profile-PNG.png",
-                      fit: BoxFit.cover,
-                      width: 60,
-                      height: 60,
+
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.all(Radius.circular(100)),
+                    ),
+                    width: 60,
+                    height: 60,
+                    child: ClipOval(
+                      child: IconButton(
+                        icon: Icon(
+                          Icons.favorite,
+                          color: Color(0xFFFF9B9B),
+                          size: 40,
+                        ),
+
+                        onPressed: (){
+                          Navigator.pushNamed(context, "/favorite");
+                        },
+                      )
+                    ),
+                  ),
+
+                  SizedBox(
+                    width: 12,
+                  ),
+
+                  GestureDetector(
+                    onTap: (){
+                      Navigator.pushNamed(context, "/editprofile");
+                    },
+                    child: ClipOval(
+                      child: Image.network(
+                        _authViewModel.loggedInUser?.imageURL ?? "https://www.pngall.com/wp-content/uploads/5/User-Profile-PNG.png",
+                        fit: BoxFit.cover,
+                        width: 60,
+                        height: 60,
+                      ),
                     ),
                   ),
                 ],
@@ -85,9 +128,6 @@ class _HomeScreenState extends State<HomeScreen> {
                               padding: const EdgeInsets.all(16.0),
                               decoration: BoxDecoration(
                                 color: Colors.white,
-                                // border: Border.all(
-                                //   width: 10,
-                                // ),
                                 borderRadius: BorderRadius.all(Radius.circular(30)),
                               ),
                               child: Column(
@@ -201,7 +241,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                             borderRadius: BorderRadius.all(Radius.circular(200)),
                                           ),
                                           child: IconButton(
-                                            onPressed: () {  },
+                                            onPressed: () {
+                                              addFavorite(data?[index]["id"], _authViewModel.loggedInUser!);
+                                            },
                                             icon: Icon(
                                               Icons.favorite,
                                               color: Colors.white,

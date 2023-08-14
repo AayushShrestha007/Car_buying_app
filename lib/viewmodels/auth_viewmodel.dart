@@ -88,6 +88,17 @@ class AuthViewModel with ChangeNotifier{
     }
   }
 
+  //View model code for adding favorite;
+  Future<void> addFavorite(String id, UserModel loggedInUser) async {
+    try {
+      await AuthRepository().addFavorite(id, loggedInUser);
+      _loggedInUser = loggedInUser;
+      notifyListeners();
+    } catch (err) {
+      rethrow;
+    }
+  }
+
   //view model code for logging out
   Future<void> logout() async {
     try {

@@ -91,8 +91,9 @@ class AuthViewModel with ChangeNotifier{
   //View model code for adding favorite;
   Future<void> addFavorite(String id, UserModel loggedInUser) async {
     try {
-      await AuthRepository().addFavorite(id, loggedInUser);
-      _loggedInUser = loggedInUser;
+
+      _loggedInUser = await AuthRepository().addFavorite(id, loggedInUser);
+
       notifyListeners();
     } catch (err) {
       rethrow;

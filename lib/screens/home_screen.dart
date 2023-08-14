@@ -110,96 +110,61 @@ class _HomeScreenState extends State<HomeScreen> {
             SingleChildScrollView(
               child: Container(
                 height: MediaQuery.of(context).size.height-110,
-                child: StreamBuilder<QuerySnapshot>(
-                    stream: _carViewModel.cars,
-                    builder: (context, snapshot){
-                      final data = snapshot.data?.docs;
-                      final length = data?.length ?? 0;
-                      print(length);
-                      return ListView.separated(
-                          scrollDirection: Axis.vertical,
-                          shrinkWrap: true,
-                          itemCount: length,
-                          itemBuilder:(context, index){
-                            return Container(
+                child: Consumer<AuthViewModel>(
+                  builder: (context, _authViewModel, child)=>
+                      StreamBuilder<QuerySnapshot>(
+                      stream: _carViewModel.cars,
+                      builder: (context, snapshot){
+                        final data = snapshot.data?.docs;
+                        final length = data?.length ?? 0;
+                        print(length);
+                        return ListView.separated(
+                            scrollDirection: Axis.vertical,
+                            shrinkWrap: true,
+                            itemCount: length,
+                            itemBuilder:(context, index){
+                              return Container(
 
-                              height: 195,
+                                height: 195,
 
-                              padding: const EdgeInsets.all(16.0),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.all(Radius.circular(30)),
-                              ),
-                              child: Column(
-                                children: [
-                                  Row(
-                                    children: [
-                                      SizedBox(
-                                        child: Image.network(
-                                          data?[index]["imageURL"],
-                                          width: 190,
-                                          height: 120,
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        width: 20,
-                                      ),
-                                      
-                                      Flexible(
-                                        child: Text(data?[index]["name"],
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 16,
+                                padding: const EdgeInsets.all(16.0),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.all(Radius.circular(30)),
+                                ),
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      children: [
+                                        SizedBox(
+                                          child: Image.network(
+                                            data?[index]["imageURL"],
+                                            width: 190,
+                                            height: 120,
                                           ),
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    children: [
-
-                                      //container to show seats
-                                      Container(
-                                          width: 100,
-                                          height: 40,
-                                          alignment: Alignment.center,
-                                        decoration: BoxDecoration(
-                                          color: Color(0xFF1F2959),
-                                          borderRadius: BorderRadius.all(Radius.circular(30)),
+                                        SizedBox(
+                                          width: 20,
                                         ),
-                                        child: Row(
-                                          children: [
-                                            SizedBox(
-                                              width: 14,
+
+                                        Flexible(
+                                          child: Text(data?[index]["name"],
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16,
                                             ),
-                                            Icon(Icons.event_seat,
-                                            color: Colors.white,
-                                            size: 15),
-                                            SizedBox(
-                                              width: 5,
-                                            ),
-                                            Text(data?[index]["seat"] + " Seat",
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 13,
-                                              ),
-                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
 
-                                          ],
-                                        )
-
-                                      ),
-
-                                      SizedBox(
-                                        width: 10,
-                                      ),
-
-                                      //Container to show speed
-                                      Container(
-                                          width: 100,
-                                          height: 40,
-                                          alignment: Alignment.center,
+                                        //container to show seats
+                                        Container(
+                                            width: 100,
+                                            height: 40,
+                                            alignment: Alignment.center,
                                           decoration: BoxDecoration(
                                             color: Color(0xFF1F2959),
                                             borderRadius: BorderRadius.all(Radius.circular(30)),
@@ -209,13 +174,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                               SizedBox(
                                                 width: 14,
                                               ),
-                                              Icon(Icons.speed,
-                                                  color: Colors.white,
-                                                  size: 15),
+                                              Icon(Icons.event_seat,
+                                              color: Colors.white,
+                                              size: 15),
                                               SizedBox(
                                                 width: 5,
                                               ),
-                                              Text(data?[index]["speed"],
+                                              Text(data?[index]["seat"] + " Seat",
                                                 style: TextStyle(
                                                   color: Colors.white,
                                                   fontWeight: FontWeight.bold,
@@ -226,47 +191,85 @@ class _HomeScreenState extends State<HomeScreen> {
                                             ],
                                           )
 
-                                      ),
+                                        ),
 
-                                      SizedBox(
-                                        width: 60,
-                                      ),
-                                      //container to show favorite button
-                                      Container(
-                                          width: 40,
-                                          height: 40,
-                                          alignment: Alignment.center,
-                                          decoration: BoxDecoration(
-                                            color: Color(0xFF1F2959),
-                                            borderRadius: BorderRadius.all(Radius.circular(200)),
-                                          ),
-                                          child: IconButton(
-                                            onPressed: () {
-                                              addFavorite(data?[index]["id"], _authViewModel.loggedInUser!);
-                                            },
-                                            icon: Icon(
-                                              Icons.favorite,
-                                              color: Colors.white,
-                                              size: 20,
+                                        SizedBox(
+                                          width: 10,
+                                        ),
+
+                                        //Container to show speed
+                                        Container(
+                                            width: 100,
+                                            height: 40,
+                                            alignment: Alignment.center,
+                                            decoration: BoxDecoration(
+                                              color: Color(0xFF1F2959),
+                                              borderRadius: BorderRadius.all(Radius.circular(30)),
+                                            ),
+                                            child: Row(
+                                              children: [
+                                                SizedBox(
+                                                  width: 14,
+                                                ),
+                                                Icon(Icons.speed,
+                                                    color: Colors.white,
+                                                    size: 15),
+                                                SizedBox(
+                                                  width: 5,
+                                                ),
+                                                Text(data?[index]["speed"],
+                                                  style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 13,
+                                                  ),
+                                                ),
+
+                                              ],
+                                            )
+
+                                        ),
+
+                                        SizedBox(
+                                          width: 60,
+                                        ),
+                                        //container to show favorite button
+                                        Container(
+                                            width: 40,
+                                            height: 40,
+                                            alignment: Alignment.center,
+                                            decoration: BoxDecoration(
+                                              color: Color(0xFF1F2959),
+                                              borderRadius: BorderRadius.all(Radius.circular(200)),
+                                            ),
+                                            child: IconButton(
+                                              onPressed: () {
+                                                addFavorite(data?[index]["id"], _authViewModel.loggedInUser!);
+                                              },
+                                              icon: Icon(
+                                                Icons.favorite,
+                                                color: Colors.white,
+                                                size: 20,
+                                              ),
+
                                             ),
 
-                                          ),
+                                        )
 
-                                      )
-
-                                    ],
-                                  )
-                                ],
-                              )
-                            );
+                                      ],
+                                    )
+                                  ],
+                                )
+                              );
+                            },
+                          separatorBuilder: (BuildContext context, int index) {
+                              return SizedBox(
+                                height: 20,
+                              );
                           },
-                        separatorBuilder: (BuildContext context, int index) {
-                            return SizedBox(
-                              height: 20,
-                            );
-                        },
-                      );
-                    }
+                        );
+                      }
+                  ),
                 ),
               ),
             )

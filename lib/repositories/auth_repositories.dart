@@ -148,13 +148,18 @@ class AuthRepository{
   //Repo code for adding something to the favorite list
   Future<UserModel> addFavorite(String id, UserModel loggedInUser) async{
 
+    String? userId= loggedInUser.id;
+
     try {
       final response = await CarRepository().carRef.where("id", isEqualTo: id).get();
 
-      print("this is the ref ${response.docs.single.data()}");
-      userRef.doc(loggedInUser.id).update({
+      await userRef.doc(userId).update({
         "favorite": FieldValue.arrayUnion([response.docs.single.data().toJson()]),
       });
+
+      final response2= await userRef.where("id", isEqualTo: userId).get();
+
+      loggedInUser = response2.docs.single.data();
 
       return loggedInUser;
     } catch (err) {
